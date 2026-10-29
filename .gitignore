@@ -2,3 +2,4 @@
 discord.log
 pyproject.toml
 uv.lock
+.uv
