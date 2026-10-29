@@ -32,6 +32,9 @@ def mention_ssjmonster(msg: message, ssj_nick: str = "monster133") -> str:
 async def on_message(message):
     if message.author == bot.user:
         return
+    else:
+        await message.channel.send(message.content)
+        return
     if "stas" in message.content.lower():
         await message.channel.send(f"{mention_ssjmonster(message)} +10 aury za popularność")
     await bot.process_commands(message)

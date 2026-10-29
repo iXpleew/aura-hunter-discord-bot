@@ -2,4 +2,5 @@
 discord.log
 pyproject.toml
 uv.lock
+.idea
 .uv
