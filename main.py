@@ -20,4 +20,14 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
 
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    if "stas" in message.content.lower():
+        await message.channel.send(f"@monster133 +10 aury za popularność")
+    await bot.process_commands(message)
+
+
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)

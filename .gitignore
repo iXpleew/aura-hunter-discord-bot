@@ -1,2 +1,4 @@
 .env
 discord.log
+pyproject.toml
+uv.lock
