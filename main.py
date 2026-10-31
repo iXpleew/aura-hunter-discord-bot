@@ -1,8 +1,5 @@
-from email import message
-
 import discord
 from discord.ext import commands
-from discord.abc import User
 import logging
 from dotenv import load_dotenv
 import os
@@ -24,16 +21,13 @@ async def on_ready():
     print(bot.user.id)
 
 
-def mention_ssjmonster(msg: message, ssj_nick: str = "monster133") -> str:
+def mention_ssjmonster(msg: discord.Message, ssj_nick: str = "monster133") -> str:
     return f"<@{msg.guild.get_member_named(ssj_nick).id}>"
 
 
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
-        return
-    else:
-        await message.channel.send(message.content)
         return
     if "stas" in message.content.lower():
         await message.channel.send(f"{mention_ssjmonster(message)} +10 aury za popularność")
