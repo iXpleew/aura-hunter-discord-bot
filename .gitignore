@@ -4,3 +4,4 @@ pyproject.toml
 uv.lock
 .idea
 .uv
+messages.sqlite

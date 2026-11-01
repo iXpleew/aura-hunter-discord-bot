@@ -25,12 +25,16 @@ def mention_ssjmonster(msg: discord.Message, ssj_nick: str = "monster133") -> st
     return f"<@{msg.guild.get_member_named(ssj_nick).id}>"
 
 
+async def searching_channel_history(channel: discord.TextChannel):
+    async for message in channel.history(limit=10):
+        await channel.send(f"{message.author.name} wysłał wiadomość {message.content} -> XD")
+
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
-    if "stas" in message.content.lower():
-        await message.channel.send(f"{mention_ssjmonster(message)} +10 aury za popularność")
+    await searching_channel_history(message.channel)
     await bot.process_commands(message)
 
 
