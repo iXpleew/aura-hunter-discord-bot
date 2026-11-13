@@ -34,7 +34,9 @@ async def searching_channel_history(channel: discord.TextChannel):
 async def on_message(message):
     if message.author == bot.user:
         return
-    await searching_channel_history(message.channel)
+    if message.content == "Kogo kochamy najbardziej?":
+        await message.channel.send("Igoreka <333")
+    # await searching_channel_history(message.channel)
     await bot.process_commands(message)
 
 

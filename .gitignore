@@ -4,4 +4,4 @@ pyproject.toml
 uv.lock
 .idea
 .uv
-messages.sqlite
+data/discord_data.sqlite
