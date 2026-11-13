@@ -3,6 +3,7 @@ from discord.ext import commands
 import logging
 from dotenv import load_dotenv
 import os
+import collector
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
@@ -12,7 +13,13 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='$', intents=intents)
+
+class AuraBot(commands.Bot):
+    async def setup_hook(self) -> None:
+        await self.add_cog(collector.Collector(self))
+
+
+bot = AuraBot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
@@ -38,6 +45,7 @@ async def on_message(message):
         await message.channel.send("Igoreka <333")
     # await searching_channel_history(message.channel)
     await bot.process_commands(message)
+
 
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
