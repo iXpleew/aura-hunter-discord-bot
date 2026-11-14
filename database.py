@@ -2,7 +2,7 @@ import sqlite3
 import discord
 
 
-DATABASE_PATH : str = 'data/discord_data.db'
+DATABASE_PATH : str = 'data/discord_data.sqlite'
 
 
 def insert_users(users: list[tuple[int, str]]) -> None:

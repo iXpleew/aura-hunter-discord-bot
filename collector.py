@@ -10,9 +10,6 @@ class Collector(commands.Cog):
 
     def import_members(self):
         self.server_members = self.server_members = [(member.id, member.name) for member in self.bot.get_all_members()]
-
-
-    def insert_users_to_database(self):
         database.insert_users(self.server_members)
 
 
