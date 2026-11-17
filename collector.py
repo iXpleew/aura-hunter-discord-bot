@@ -26,6 +26,13 @@ class Collector(commands.Cog):
         database.insert_roles(server_roles)
 
 
+    def get_response_info(self, message:discord.Message):
+        if message.reference:
+            return message.reference.message_id
+        else:
+            return None
+
+
     def insert_messages(self, messages_list: list):
         for m_id, m_content, m_datetime, m_author_id, m_channel_id, m_ref_message_id in messages_list:
             database.insert_message(m_id, m_content, m_datetime, m_author_id, m_channel_id, m_ref_message_id)
@@ -47,8 +54,12 @@ class Collector(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        print("odpalam sie")
         if message.author == self.bot.user:
             return
         main_channel = message.channel
-
-        await self.inserting_channel_history(message.channel)
+        print("mam kanal")
+        messages_history = await self.create_channel_history_list(main_channel, list_limit=15_000)
+        print("mam historie")
+        self.insert_messages(messages_history)
+        print("done!")

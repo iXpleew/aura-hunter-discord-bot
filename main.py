@@ -20,4 +20,4 @@ class AuraBot(commands.Bot):
 
 
 bot = AuraBot(command_prefix="!", intents=intents)
-bot.run(token, log_handler=handler, log_level=logging.DEBUG)
+bot.run(token, log_handler=handler, log_level=logging.INFO)
