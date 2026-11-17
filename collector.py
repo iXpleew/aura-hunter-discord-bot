@@ -44,7 +44,7 @@ class Collector(commands.Cog):
 
 
     async def create_channel_history_list(self, channel: discord.TextChannel, list_limit:int) -> list:
-        messages_history = [(message.id, message.content, message.created_at, message.author.id, message.channel.id, message.reference.message_id)
+        messages_history = [(message.id, message.content, message.created_at, message.author.id, message.channel.id, self.get_response_info(message))
                             async for message in channel.history(limit=list_limit)
                             if message.author != self.bot.user and
                             not message.author.bot]
