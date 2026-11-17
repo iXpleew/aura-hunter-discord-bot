@@ -26,28 +26,29 @@ class Collector(commands.Cog):
         database.insert_roles(server_roles)
 
 
+    def insert_messages(self, messages_list: list):
+        for m_id, m_content, m_datetime, m_author_id, m_channel_id, m_ref_message_id in messages_list:
+            database.insert_message(m_id, m_content, m_datetime, m_author_id, m_channel_id, m_ref_message_id)
+
+
     @commands.Cog.listener()
     async def on_ready(self):
-        #client = discord.Client()
-        channel = discord.utils.get(self.bot.get_all_channels(), id=900807036466507789)
-        self.import_members()
-        self.insert_channels()
-        self.insert_roles()
         print(f"I'm working {self.bot.user}")
 
 
-    async def searching_channel_history(self, channel: discord.TextChannel):
-        messages_history = [message async for message in channel.history(limit=10000)
+    async def create_channel_history_list(self, channel: discord.TextChannel, list_limit:int) -> list:
+        messages_history = [(message.id, message.content, message.created_at, message.author.id, message.channel.id, message.reference.message_id)
+                            async for message in channel.history(limit=list_limit)
                             if message.author != self.bot.user and
-                            not message.author.bot  and
-                            len(message.content) > 10]
+                            not message.author.bot]
+        return messages_history
 
-        for message in messages_history:
-            print(f"{message.author} - {message.content} - {message.channel}")
 
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.bot.user:
             return
-        # await self.searching_channel_history(message.channel)
+        main_channel = message.channel
+
+        await self.inserting_channel_history(message.channel)

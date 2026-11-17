@@ -56,3 +56,6 @@ def insert_roles(roles: list[tuple[int, str]]) -> None:
 
     connection.commit()
     connection.close()
+
+
+def insert_message(messages: list[])
