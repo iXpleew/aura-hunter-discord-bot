@@ -1,5 +1,6 @@
 import sqlite3
-from os.path import curdir
+from message_class import Message
+from datetime import datetime
 
 DATABASE_PATH : str = '../data/discord_data.sqlite'
 
@@ -94,4 +95,10 @@ def get_messages_for_manual_classification():
                     limit 5;"""))
 
     connection.close()
-    return message_list
+    message_objects = []
+    for message in message_list:
+        mes_id, mes_content, mes_time_sent, mes_user_id, mes_channel_id, mes_response_id = message
+        new_message_obj = Message(mes_id, mes_content, datetime.fromisoformat(mes_time_sent).replace(microsecond=0, tzinfo=None), mes_user_id, mes_channel_id, mes_response_id)
+        message_objects.append(new_message_obj)
+
+    return message_objects
