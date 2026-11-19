@@ -1,5 +1,5 @@
 import sqlite3
-
+from os.path import curdir
 
 DATABASE_PATH : str = '../data/discord_data.sqlite'
 
@@ -40,6 +40,7 @@ def insert_channels(channels: list[tuple[int,str]]) -> None:
     connection.commit()
     connection.close()
 
+
 def insert_roles(roles: list[tuple[int, str]]) -> None:
     connection = sqlite3.connect(DATABASE_PATH)
     cursor = connection.cursor()
@@ -72,3 +73,25 @@ def insert_message(m_id: int, m_content: str, m_time: str, m_user_id: int, m_cha
 
     connection.commit()
     connection.close()
+
+def get_username_by_id(user_id: int) -> str:
+    connection = sqlite3.connect(DATABASE_PATH)
+    cursor = connection.cursor()
+    name = cursor.execute("""
+    SELECT user_name FROM DISCORD_USERS WHERE user_id = ?""", (user_id,)).fetchone()[0]
+    connection.close()
+    return name
+
+
+def get_messages_for_manual_classification():
+    connection = sqlite3.connect(DATABASE_PATH)
+    cursor = connection.cursor()
+    message_list = list(cursor.execute("""
+                    SELECT mes.* FROM DISCORD_MESSAGES mes
+                    LEFT JOIN DISCORD_MESSAGES_AURA aur ON mes.message_id = aur.message_id
+                    where aur.message_id is NULL
+                    ORDER BY random()
+                    limit 5;"""))
+
+    connection.close()
+    return message_list
