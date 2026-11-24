@@ -85,8 +85,24 @@ def get_username_by_id(user_id: int) -> str:
     return name
 
 
+
+
 def insert_aura_messages(messages_with_aura: dict):
-    pass
+    connection = sqlite3.connect(DATABASE_PATH)
+    cursor = connection.cursor()
+    cursor.execute("""
+    PRAGMA foreign_keys = ON;""")
+    for message_id, aura_classification in messages_with_aura.items():
+        connection = sqlite3.connect(DATABASE_PATH)
+        cursor = connection.cursor()
+        cursor.execute("""
+        INSERT INTO DISCORD_MESSAGES_AURA (message_id, aura_points, who_evaluated, date)
+        VALUES(?,?,?,?); """, (message_id, aura_classification, "human", datetime.now().replace(microsecond=0, tzinfo=None)))
+        connection.commit()
+
+    connection.close()
+
+        
 
 
 def get_messages_for_manual_classification():
