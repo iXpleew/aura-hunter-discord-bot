@@ -85,9 +85,7 @@ def get_username_by_id(user_id: int) -> str:
     return name
 
 
-
-
-def insert_aura_messages(messages_with_aura: dict):
+def insert_aura_messages(messages_with_aura: dict, who_evaluated: str) -> None:
     connection = sqlite3.connect(DATABASE_PATH)
     cursor = connection.cursor()
     cursor.execute("""
@@ -97,15 +95,32 @@ def insert_aura_messages(messages_with_aura: dict):
         cursor = connection.cursor()
         cursor.execute("""
         INSERT INTO DISCORD_MESSAGES_AURA (message_id, aura_points, who_evaluated, date)
-        VALUES(?,?,?,?); """, (message_id, aura_classification, "human", datetime.now().replace(microsecond=0, tzinfo=None)))
+        VALUES(?,?,?,?); """, (message_id, aura_classification, who_evaluated, datetime.now().replace(microsecond=0, tzinfo=None)))
         connection.commit()
 
     connection.close()
 
-        
+
+def get_specific_messages(message_keyword: str) -> list:
+    connection = sqlite3.connect(DATABASE_PATH)
+    cursor = connection.cursor()
+    message_list = list(cursor.execute("""
+                    SELECT mes.* FROM DISCORD_MESSAGES mes
+                    LEFT JOIN DISCORD_MESSAGES_AURA aur on mes.message_id = aur.message_id
+                    where aur.message_id is NULL and
+                    mes.content like ?""", (f"%{message_keyword}%",)))
+
+    connection.close()
+    message_objects = []
+    for message in message_list:
+        mes_id, mes_content, mes_time_sent, mes_user_id, mes_channel_id, mes_response_id = message
+        new_message_obj = Message(mes_id, mes_content, datetime.fromisoformat(mes_time_sent).replace(microsecond=0, tzinfo=None), mes_user_id, mes_channel_id, mes_response_id)
+        message_objects.append(new_message_obj)
+
+    return message_objects
 
 
-def get_messages_for_manual_classification():
+def get_random_messages():
     connection = sqlite3.connect(DATABASE_PATH)
     cursor = connection.cursor()
     message_list = list(cursor.execute("""
