@@ -75,6 +75,7 @@ def insert_message(m_id: int, m_content: str, m_time: str, m_user_id: int, m_cha
     connection.commit()
     connection.close()
 
+
 def get_username_by_id(user_id: int) -> str:
     connection = sqlite3.connect(DATABASE_PATH)
     cursor = connection.cursor()
@@ -82,6 +83,10 @@ def get_username_by_id(user_id: int) -> str:
     SELECT user_name FROM DISCORD_USERS WHERE user_id = ?""", (user_id,)).fetchone()[0]
     connection.close()
     return name
+
+
+def insert_aura_messages(messages_with_aura: dict):
+    pass
 
 
 def get_messages_for_manual_classification():
